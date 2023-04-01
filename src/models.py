@@ -19,3 +19,15 @@ class User(db.Model):
             "name": self.name
             # do not serialize the password, its a security breach
         }
+
+class People(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    
+    name = db.Column(db.String(120), unique=False, nullable=False)
+
+    def serialize(self):
+        return {
+            "id": self.id,        
+            "name": self.name
+            # do not serialize the password, its a security breach
+        }
