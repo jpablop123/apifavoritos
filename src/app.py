@@ -153,7 +153,8 @@ def list_favorites():
     #user_favorites_planets = FavoritePlanets.query.filter_by(user_id=user.id).all()
     #user_favorites_final_planets = list(map(lambda item: item.serialize(), user_favorites_planets))
 
-    #user_favorites_final = user_favorites_final + ser_favorites_final_planets
+
+    #user_favorites_final = user_favorites_final + user_favorites_final_planets + user_favorites_final_vehicles
 
     return jsonify(user_favorites_final), 200
     
