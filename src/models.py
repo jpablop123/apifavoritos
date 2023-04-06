@@ -23,7 +23,7 @@ class User(db.Model):
 
 class People(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    height = db.Column(db.String, unique=False, nullable=False)
+    height = db.Column(db.Float, unique=False, nullable=False)
     name = db.Column(db.String(120), unique=False, nullable=False)
     mass = db.Column(db.String(80), unique=False, nullable=False)
     hair_color = db.Column(db.String(80), unique=False, nullable=False)
@@ -55,6 +55,19 @@ class FavoritePeople (db.Model):
             "people":People.query.get(self.people_id).serialize()
         }
 
+class TokenBlockedList(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    token = db.Column(db.String(250), unique=True, nullable=False)
+    email = db.Column(db.String(50), unique=False)
+    created_at = db.Column(db.DateTime, nullable=False)
+
+    def serialize(self):
+        return {
+            "id":self.id,
+            "token":self.token,
+            "email":self.email,
+            "created":self.created_at
+        }
 
 # new_favorite = FavoritePeople(user_id= ..... , )
 # new_favorite.user.serialize()
