@@ -52,10 +52,10 @@ def sitemap():
     return generate_sitemap(app)
 
 
-def verificacionToken(identity):
-    identity#Identificador del JWT (es más corto)
-    print("jit", identity)
-    token = TokenBlockedList.query.filter_by(token=identity).first()
+def verificacionToken(jti):
+    jti#Identificador del JWT (es más corto)
+    print("jit", jti)
+    token = TokenBlockedList.query.filter_by(token=jti).first()
 
     if token is None:
         return False
