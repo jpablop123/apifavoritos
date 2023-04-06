@@ -51,6 +51,17 @@ def handle_invalid_usage(error):
 def sitemap():
     return generate_sitemap(app)
 
+
+def verificacionToken(identity):
+    identity#Identificador del JWT (es más corto)
+    print("jit", identity)
+    token = TokenBlockedList.query.filter_by(token=identity).first()
+
+    if token is None:
+        return False
+    
+    return True
+
 @app.route('/user', methods=['GET'])
 def handle_hello():
     users = User.query.all()  #<User Antonio>
@@ -201,6 +212,12 @@ def protected():
     # Access the identity of the current user with get_jwt_identity
     current_user = get_jwt_identity()
     user = User.query.get(current_user)
+
+    token = verificacionToken(get_jwt()["jti"]) #reuso la función de verificacion de token
+    print(token)
+    if token:
+       raise APIException('Token está en lista negra', status_code=404)
+
     print("EL usuario es: ", user.name)
     return jsonify({"message":"Estás en una ruta protegida"}), 200
 
