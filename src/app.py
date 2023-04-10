@@ -221,6 +221,9 @@ def protected():
     print("EL usuario es: ", user.name)
     return jsonify({"message":"Estás en una ruta protegida"}), 200
 
+
+
+
 @app.route("/logout", methods=["POST"])
 @jwt_required()
 def logout():
@@ -236,6 +239,22 @@ def logout():
     db.session.commit()
 
     return jsonify({"message":"logout successfully"})
+
+@app.route("/obtenerfavoritos", methods=["GET"])
+@jwt_required()
+def get_user_favorites():
+    # Access the identity of the current user with get_jwt_identity
+    current_user = get_jwt_identity()
+    user = User.query.get(current_user)
+
+    token = verificacionToken(get_jwt()["jti"]) #reuso la función de verificacion de token
+    print(token)
+    if token:
+       raise APIException('Token está en lista negra', status_code=404)
+
+    favorites = FavoritePeople.query.filter_by(user_id=user.id).all()
+    favorites = list(map(lambda item: item.serialize(), favorites))
+    return jsonify({"result":favorites,}), 200
 
 
 # this only runs if `$ python src/app.py` is executed
