@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: d43420572da8
+Revision ID: 71faae108f27
 Revises: 
-Create Date: 2023-04-06 01:22:45.155811
+Create Date: 2023-04-13 02:39:35.893463
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'd43420572da8'
+revision = '71faae108f27'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -24,6 +24,14 @@ def upgrade():
     sa.Column('name', sa.String(length=120), nullable=False),
     sa.Column('mass', sa.String(length=80), nullable=False),
     sa.Column('hair_color', sa.String(length=80), nullable=False),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('planet',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('name', sa.Float(), nullable=False),
+    sa.Column('size', sa.String(length=120), nullable=False),
+    sa.Column('weight', sa.String(length=80), nullable=False),
+    sa.Column('mass', sa.String(length=80), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('token_blocked_list',
@@ -59,5 +67,6 @@ def downgrade():
     op.drop_table('favorite_people')
     op.drop_table('user')
     op.drop_table('token_blocked_list')
+    op.drop_table('planet')
     op.drop_table('people')
     # ### end Alembic commands ###

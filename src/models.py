@@ -38,7 +38,25 @@ class People(db.Model):
             "hair_color":self.hair_color
             # do not serialize the password, its a security breach
         }
+
+class Planet(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.Float, unique=False, nullable=False)
+    size = db.Column(db.String(120), unique=False, nullable=False)
+    weight = db.Column(db.String(80), unique=False, nullable=False)
+    mass = db.Column(db.String(80), unique=False, nullable=False)
+    favorite_people = db.relationship('Planet', backref= 'people', lazy=True)
     
+    def serialize(self):
+        return {
+            "id": self.id,        
+            "name": self.name,
+            "size": self.size,
+            "weight": self.weight,
+            "mass":self.mass
+            # do not serialize the password, its a security breach
+        }    
+
 class FavoritePeople (db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
