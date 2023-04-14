@@ -45,7 +45,7 @@ class Planet(db.Model):
     size = db.Column(db.String(120), unique=False, nullable=False)
     weight = db.Column(db.String(80), unique=False, nullable=False)
     mass = db.Column(db.String(80), unique=False, nullable=False)
-    favorite_people = db.relationship('Planet', backref= 'people', lazy=True)
+    favorite_people = db.relationship('FavoritePlanet', backref= 'planet', lazy=True)
     
     def serialize(self):
         return {
@@ -55,7 +55,8 @@ class Planet(db.Model):
             "weight": self.weight,
             "mass":self.mass
             # do not serialize the password, its a security breach
-        }    
+        }   
+         
 
 class FavoritePeople (db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -71,6 +72,21 @@ class FavoritePeople (db.Model):
             "user_name": User.query.get(self.user_id).serialize()["name"],
             "user":User.query.get(self.user_id).serialize(),
             "people":People.query.get(self.people_id).serialize()
+        }
+class FavoritePlanet (db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    planet_id = db.Column(db.Integer, db.ForeignKey('planet.id'), nullable=False)
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "planet_id": self.planet_id,
+            "user_id": self.user_id,
+            "planet_name": Planet.query.get(self.planet_id).serialize()["name"],
+            "user_name": User.query.get(self.user_id).serialize()["name"],
+            "user":User.query.get(self.user_id).serialize(),
+            "planet":Planet.query.get(self.planet_id).serialize()
         }
 
 class TokenBlockedList(db.Model):

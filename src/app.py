@@ -79,7 +79,7 @@ def register_user():
     email = body["email"]
     name = body["name"]
     password = body["password"]
-    is_active = body["is_active"]
+    is_active = 1
 
     #validaciones
     if body is None:
