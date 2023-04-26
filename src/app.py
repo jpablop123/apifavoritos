@@ -113,7 +113,7 @@ def get_specific_user2():
   
     return jsonify(user.serialize()), 200
 
-@app.route('/get-user', methods=['DELETE'])
+@app.route('/deleteuser', methods=['DELETE'])
 def delete_specific_user():
     body = request.get_json()   
     id = body["id"]
@@ -125,7 +125,7 @@ def delete_specific_user():
   
     return jsonify("Usuario borrado"), 200
 
-@app.route('/get-user', methods=['PUT'])
+@app.route('/edituser', methods=['PUT'])
 def edit_user():
     body = request.get_json()   
     id = body["id"]
@@ -138,7 +138,7 @@ def edit_user():
   
     return jsonify(user.serialize()), 200
 
-@app.route('/add-favorite/people', methods=['POST'])
+@app.route('/addfavoritepeople', methods=['POST'])
 def add_favorite_people():
     body = request.get_json()
     user_id = body["user_id"]
@@ -164,7 +164,7 @@ def add_favorite_people():
     return jsonify(favorite_people.serialize()), 201
 
 
-@app.route('/favorites', methods=['POST'])
+@app.route('/favoritepeople', methods=['POST'])
 def list_favorites():
     body = request.get_json()
     user_id = body["user_id"]
@@ -185,6 +185,55 @@ def list_favorites():
     #user_favorites_final = user_favorites_final + user_favorites_final_planets + user_favorites_final_vehicles
 
     return jsonify(user_favorites_final), 200
+
+
+@app.route('/addfavoritevehicles', methods=['POST'])
+def add_favorite_vehicles():
+    body = request.get_json()
+    user_id = body["user_id"]
+    people_id = body["people_id"]
+
+    character = People.query.get(vehicles_id)
+    if not character:
+        raise APIException('personaje no encontrado', status_code=404)
+    
+    user = User.query.get(user_id)
+    if not user:
+        raise APIException('usuario no encontrado', status_code=404)
+
+    fav_exist = FavoriteVehicles.query.filter_by(user_id = user.id, people_id = character.id).first() is not None
+    
+    if fav_exist:
+        raise APIException('el usuario ya lo tiene agregado a favoritos', status_code=404)
+
+    favorite_vehicles = FavoriteVehicles(user_id=user.id, people_id=character.id)
+    db.session.add(favorite_vehicles)
+    db.session.commit()
+
+    return jsonify(favorite_vehicles.serialize()), 201
+
+
+@app.route('/favoritevehicles', methods=['POST'])
+def list_favorites_vehicles():
+    body = request.get_json()
+    user_id = body["user_id"]
+    if not user_id:
+        raise APIException('faltan datos', status_code=404)
+    
+    user = User.query.get(user_id)
+    if not user:
+        raise APIException('usuario no encontrado', status_code=404)
+
+    user_favorites = FavoriteVehicles.query.filter_by(user_id=user.id).all()    
+    user_favorites_final = list(map(lambda item: item.serialize(), user_favorites))
+
+    #user_favorites_planets = FavoritePlanets.query.filter_by(user_id=user.id).all()
+    #user_favorites_final_planets = list(map(lambda item: item.serialize(), user_favorites_planets))
+
+
+    #user_favorites_final = user_favorites_final + user_favorites_final_planets + user_favorites_final_vehicles
+
+    return jsonify(user_favorites_final), 200    
 
 @app.route('/login', methods=['POST'])
 def login():

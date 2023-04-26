@@ -45,7 +45,7 @@ class Planet (db.Model):
     size = db.Column(db.String(120), unique=False, nullable=False)
     weight = db.Column(db.String(80), unique=False, nullable=False)
     mass = db.Column(db.String(80), unique=False, nullable=False)
-    favorite_people = db.relationship('FavoritePlanet', backref= 'planet', lazy=True)
+    favorite_people = db.relationship('FavoritePlanets', backref= 'planet', lazy=True)
     
     def serialize(self):
         return {
