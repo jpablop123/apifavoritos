@@ -39,7 +39,7 @@ class People(db.Model):
             # do not serialize the password, its a security breach
         }
 
-class Planet(db.Model):
+class Planet (db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.Float, unique=False, nullable=False)
     size = db.Column(db.String(120), unique=False, nullable=False)
@@ -73,7 +73,42 @@ class FavoritePeople (db.Model):
             "user":User.query.get(self.user_id).serialize(),
             "people":People.query.get(self.people_id).serialize()
         }
-class FavoritePlanet (db.Model):
+class Vehicles(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(120), unique=False, nullable=False)
+    passengers = db.Column(db.String(80), unique=False, nullable=False)
+    length = db.Column(db.String(80), unique=False, nullable=False)
+    cargo_capacity = db.Column(db.String(80), unique=False, nullable=False)
+    favorite_vehicles = db.relationship('FavoriteVehicles', backref= 'vehicles', lazy=True)
+
+    def __repr__(self):
+        return '<Vehicles %r>' % self.name
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "passengers": self.passengers,
+            "length": self.length,
+            "cargo_capacity": self.cargo_capacity
+        }
+
+class FavoriteVehicles (db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    vehicle_id = db.Column(db.Integer, db.ForeignKey('vehicles.id'), nullable=False)
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "vehicle_id": self.vehicle_id,
+            "user_id": self.user_id,
+            "vehicle_name": Vehicles.query.get(self.vehicle_id).serialize()["name"],
+            "user_name": User.query.get(self.user_id).serialize()["name"],
+            "user":User.query.get(self.user_id).serialize(),
+            "vehicle":Vehicles.query.get(self.vehicle_id).serialize()
+        }                
+class FavoritePlanets (db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     planet_id = db.Column(db.Integer, db.ForeignKey('planet.id'), nullable=False)

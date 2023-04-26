@@ -1,6 +1,6 @@
 import os
 from flask_admin import Admin
-from models import db, User, People, FavoritePeople, TokenBlockedList,Planet,FavoritePlanet
+from models import db, User, People, Planet, Vehicles, FavoritePeople, FavoritePlanets, FavoriteVehicles, TokenBlockedList
 from flask_admin.contrib.sqla import ModelView
 
 
@@ -14,8 +14,10 @@ def setup_admin(app):
     admin.add_view(ModelView(User, db.session))
     admin.add_view(ModelView(People, db.session))
     admin.add_view(ModelView(Planet, db.session))
-    admin.add_view(ModelView(FavoritePlanet, db.session))
+    admin.add_view(ModelView(Vehicles, db.session))
     admin.add_view(ModelView(FavoritePeople, db.session))
+    admin.add_view(ModelView(FavoritePlanets, db.session))
+    admin.add_view(ModelView(FavoriteVehicles, db.session))
     admin.add_view(ModelView(TokenBlockedList, db.session))
     
 
